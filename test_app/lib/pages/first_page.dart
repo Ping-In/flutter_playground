@@ -1,11 +1,30 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_field, prefer_final_fields, must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:test_app/pages/home_page.dart';
-import 'package:test_app/pages/second_page.dart';
+import 'package:test_app/pages/profile_page.dart';
+import 'package:test_app/pages/settings_page.dart';
 
-class FirstPage extends StatelessWidget {
-  const FirstPage({super.key});
+class FirstPage extends StatefulWidget {
+  FirstPage({super.key});
+
+  @override
+  State<FirstPage> createState() => _FirstPageState();
+}
+
+class _FirstPageState extends State<FirstPage> {
+  int _selectedIndex = 0;
+
+  void _navigateBottemBar(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  final List _pages = [
+    HomePage(),
+    ProfilePage(),
+    SettingsPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +64,17 @@ class FirstPage extends StatelessWidget {
           ),
         ]),
       ),
-      body: Center(
-          child: ElevatedButton(
-        child: Text("Go To Second Page"),
-        onPressed: () {
-          Navigator.pushNamed(context, '/secondPage');
-        },
-      )),
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _navigateBottemBar,
+        backgroundColor: Color.fromARGB(255, 6, 255, 14),
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
+        ],
+      ),
     );
   }
 }
