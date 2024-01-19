@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
             Image.asset("images/pingin.png", fit: BoxFit.cover),
             const SizedBox(height: 50),
             Text(
-              "Welcome to Ping-In!",
+              "Welcome to Ping-In!!",
               style: TextStyle(fontSize: 24),
             ),
             const SizedBox(height: 50),
