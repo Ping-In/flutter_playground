@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
+import 'package:test_app/auth/auth_service.dart';
 import 'package:test_app/components/text_field.dart';
 
 import '../components/button.dart';
@@ -15,7 +16,27 @@ class RegisterPage extends StatelessWidget {
 
   RegisterPage({super.key, required this.onTap});
 
-  void register() {}
+  void register(BuildContext context) {
+    final _authService = AuthService();
+
+    if (_passwordController.text == _confirmPasswordController.text) {
+      try {
+        _authService.signUp(_emailController.text, _passwordController.text);
+      } catch (error) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text(error.toString()),
+                ));
+      }
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => const AlertDialog(
+                title: Text("Passwords do not match!"),
+              ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +58,7 @@ class RegisterPage extends StatelessWidget {
             // email text
             MyTextField(
               hintText: "Email",
-              obscureText: true,
+              obscureText: false,
               controller: _emailController,
             ),
             const SizedBox(height: 25),
@@ -61,7 +82,7 @@ class RegisterPage extends StatelessWidget {
             // Login Button
             MyButton(
               text: "Register",
-              onTap: register,
+              onTap: () => register(context),
             ),
             const SizedBox(height: 25),
 

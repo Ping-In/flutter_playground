@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:test_app/auth/auth_service.dart';
 import 'package:test_app/components/button.dart';
 import 'package:test_app/components/text_field.dart';
 
@@ -13,7 +14,20 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key, required this.onTap});
 
   // Login method
-  void login() {}
+  void login(BuildContext context) async {
+    final authService = AuthService();
+
+    try {
+      await authService.signInWithEmailPassword(
+          _emailController.text, _passwordController.text);
+    } catch (error) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(error.toString()),
+              ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +49,7 @@ class LoginPage extends StatelessWidget {
             // email text
             MyTextField(
               hintText: "Email",
-              obscureText: true,
+              obscureText: false,
               controller: _emailController,
             ),
             const SizedBox(height: 25),
@@ -51,7 +65,7 @@ class LoginPage extends StatelessWidget {
             // Login Button
             MyButton(
               text: "Login",
-              onTap: login,
+              onTap: () => login(context),
             ),
             const SizedBox(height: 25),
 
