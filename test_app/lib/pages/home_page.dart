@@ -1,22 +1,59 @@
-// ignore_for_file: prefer_const_constructors, no_leading_underscores_for_local_identifiers
-
 import 'package:flutter/material.dart';
-import 'package:test_app/auth/auth_service.dart';
+import 'package:test_app/components/drawer.dart';
+import 'package:test_app/components/user_tile.dart';
+import 'package:test_app/pages/chat_page.dart';
+import 'package:test_app/services/auth/auth_service.dart';
+import 'package:test_app/services/auth/chat/chat_services.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
-  void logout() {
-    final _authService = AuthService();
-    _authService.signOut();
-  }
+  final ChatService _chatService = ChatService();
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-      title: Text('Home Page'),
-      actions: [IconButton(onPressed: logout, icon: Icon(Icons.logout))],
-    ));
+      appBar: AppBar(
+        title: const Text('Home Page'),
+      ),
+      drawer: const MyDrawer(),
+      body: _buildUserList(),
+    );
+  }
+
+  Widget _buildUserList() {
+    return StreamBuilder(
+      stream: _chatService.getUsersStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text("Error");
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading...");
+        }
+
+        return ListView(
+          children: snapshot.data!
+              .map<Widget>((userData) => _buildUserListItem(userData, context))
+              .toList(),
+        );
+      },
+    );
+  }
+
+  Widget _buildUserListItem(
+      Map<String, dynamic> userData, BuildContext context) {
+    return UserTile(
+      text: userData["email"],
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ChatPage(receiverEmail: userData["email"])));
+      },
+    );
   }
 }

@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
-import 'package:test_app/auth/auth_service.dart';
+import 'package:test_app/services/auth/auth_service.dart';
 import 'package:test_app/components/text_field.dart';
 
 import '../components/button.dart';
